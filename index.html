@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>מסע הלשון — כיתה ו׳</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--tc:#8B5CF6;--bg:#07071A;--sf:rgba(255,255,255,.06);--br:rgba(255,255,255,.11);--tx:#E2E2F2;--dim:#8888AA;--ok:#22c55e;--ng:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{font-family:'Rubik',sans-serif;background:var(--bg);color:var(--tx);min-height:100dvh;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+button{touch-action:manipulation}
+
+/* STARS */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twink var(--d,3s) ease-in-out infinite alternate}
+@keyframes twink{from{opacity:.1;transform:scale(1)}to{opacity:.85;transform:scale(1.5)}}
+
+/* NEBULA */
+#stars::before,#stars::after{content:'';position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+#stars::before{width:400px;height:400px;background:radial-gradient(circle,rgba(139,92,246,.15),transparent 70%);top:-100px;right:-100px}
+#stars::after{width:300px;height:300px;background:radial-gradient(circle,rgba(6,182,212,.12),transparent 70%);bottom:10%;left:-80px}
+
+/* SCREENS */
+.screen{display:none;position:relative;z-index:1;min-height:100dvh;padding:20px 16px 52px;max-width:480px;margin:0 auto;flex-direction:column;align-items:center}
+.screen.on{display:flex}
+
+/* ═══ INTRO ═══ */
+.logo{font-size:clamp(3.2rem,13vw,5.5rem);font-weight:900;background:linear-gradient(135deg,#a78bfa 0%,#38bdf8 60%,#34d399 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin-top:36px;line-height:1;letter-spacing:-.03em;animation:fadeUp .6s ease both}
+.logo-sub{color:var(--dim);font-size:.9rem;margin:10px 0 30px;text-align:center;animation:fadeUp .6s .1s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.floaters{display:flex;gap:18px;font-size:2.4rem;margin-bottom:32px;animation:fadeUp .6s .2s ease both}
+.floaters span{animation:fl var(--d,2.5s) ease-in-out infinite alternate}
+@keyframes fl{from{transform:translateY(0) rotate(-3deg)}to{transform:translateY(-12px) rotate(3deg)}}
+.name-label{font-size:.82rem;color:var(--dim);margin-bottom:8px;align-self:flex-start;width:100%;animation:fadeUp .6s .25s ease both}
+.name-inp{width:100%;padding:15px 18px;background:var(--sf);border:2px solid var(--br);border-radius:16px;color:var(--tx);font:500 1.05rem 'Rubik',sans-serif;outline:none;text-align:right;transition:border-color .2s,box-shadow .2s;animation:fadeUp .6s .3s ease both}
+.name-inp:focus{border-color:var(--tc);box-shadow:0 0 0 4px color-mix(in srgb,var(--tc) 18%,transparent)}
+.name-inp::placeholder{color:var(--dim)}
+.btn-start{width:100%;margin-top:14px;padding:17px;background:linear-gradient(135deg,#8B5CF6,#06B6D4);border:none;border-radius:16px;color:#fff;font:700 1.1rem 'Rubik',sans-serif;cursor:pointer;transition:transform .12s,opacity .2s,box-shadow .2s;letter-spacing:.02em;animation:fadeUp .6s .35s ease both;box-shadow:0 4px 24px rgba(139,92,246,.35)}
+.btn-start:disabled{opacity:.3;cursor:not-allowed;box-shadow:none}
+.btn-start:not(:disabled):active{transform:scale(.97)}
+.tp-preview{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:28px;width:100%;animation:fadeUp .6s .4s ease both}
+.tp-item{padding:13px 14px;background:var(--sf);border:1px solid var(--br);border-radius:14px;font-size:.82rem;font-weight:600;color:var(--tc);border-right:3px solid var(--tc)}
+
+/* ═══ TOPIC INTRO ═══ */
+.ti-wrap{margin:36px auto 18px;position:relative;width:110px;height:110px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both}
+.ti-icon{width:110px;height:110px;border-radius:50%;background:var(--sf);border:2px solid var(--br);display:flex;align-items:center;justify-content:center;font-size:3.2rem;position:relative;z-index:1;backdrop-filter:blur(10px)}
+.ti-ring{position:absolute;inset:-6px;border-radius:50%;border:3px solid transparent;border-top-color:var(--tc);border-right-color:var(--tc);animation:spin 1.8s linear infinite}
+.ti-ring2{position:absolute;inset:-12px;border-radius:50%;border:2px solid transparent;border-bottom-color:color-mix(in srgb,var(--tc) 40%,transparent);animation:spin 3s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes popIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.ti-title{font-size:clamp(1.9rem,8vw,2.7rem);font-weight:900;color:var(--tc);text-align:center;margin-bottom:10px;animation:fadeUp .4s .1s ease both;text-shadow:0 0 40px color-mix(in srgb,var(--tc) 50%,transparent)}
+.ti-desc{color:var(--dim);text-align:center;font-size:.9rem;line-height:1.7;margin-bottom:26px;max-width:300px;animation:fadeUp .4s .15s ease both}
+.diff-legend{width:100%;background:var(--sf);border:1px solid var(--br);border-radius:18px;padding:16px 18px;margin-bottom:26px;display:flex;flex-direction:column;gap:12px;animation:fadeUp .4s .2s ease both;backdrop-filter:blur(8px)}
+.dl-row{display:flex;align-items:center;gap:10px}
+.dl-stars{width:56px;flex-shrink:0;font-size:.85rem}
+.dl-label{flex:1;font-size:.82rem;color:var(--dim)}
+.dl-pts{font-size:.83rem;font-weight:700;color:var(--tc)}
+.ti-num{font-size:.78rem;color:var(--dim);margin-bottom:16px}
+.btn-go{width:100%;padding:17px;background:var(--tc);border:none;border-radius:16px;color:#fff;font:700 1.05rem 'Rubik',sans-serif;cursor:pointer;box-shadow:0 4px 28px color-mix(in srgb,var(--tc) 45%,transparent);transition:transform .12s;animation:fadeUp .4s .25s ease both}
+.btn-go:active{transform:scale(.97)}
+
+/* ═══ QUIZ ═══ */
+.qz-top{width:100%;display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-top:6px}
+.qz-label{font-size:.78rem;font-weight:700;color:var(--tc);flex:1;letter-spacing:.02em}
+.qz-sbox{font-family:'Orbitron',sans-serif;font-size:.82rem;background:var(--sf);border:1px solid var(--br);border-radius:20px;padding:6px 14px;color:var(--tx);transition:transform .15s}
+.qz-sbox.bump{animation:bump .3s ease}
+@keyframes bump{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.prog-wrap{width:100%;height:7px;background:rgba(255,255,255,.06);border-radius:4px;margin-bottom:8px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px;background:var(--tc);transition:width .45s cubic-bezier(.4,0,.2,1);box-shadow:0 0 12px var(--tc)}
+.q-meta{width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.q-counter{font-size:.78rem;color:var(--dim)}
+.diff-badge{padding:3px 11px;border-radius:20px;background:var(--sf);border:1px solid var(--br);font-size:.72rem;color:var(--tx)}
+.q-card{width:100%;background:var(--sf);border:1px solid color-mix(in srgb,var(--tc) 30%,var(--br));border-radius:20px;padding:22px 18px;margin-bottom:14px;animation:slideUp .32s ease;backdrop-filter:blur(10px)}
+@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.q-text{font-size:clamp(.95rem,4.3vw,1.15rem);font-weight:500;line-height:1.8;white-space:pre-line;direction:rtl}
+.opts{width:100%;display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
+.opt{width:100%;padding:14px 16px;background:var(--sf);border:2px solid var(--br);border-radius:14px;color:var(--tx);font:500 .91rem 'Rubik',sans-serif;cursor:pointer;text-align:right;direction:rtl;transition:border-color .15s,background .15s,transform .1s;display:flex;align-items:center;gap:10px;line-height:1.45}
+.opt:not(:disabled):hover{border-color:var(--tc);background:rgba(255,255,255,.09)}
+.opt:not(:disabled):active{transform:scale(.98)}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--ok)!important;background:rgba(34,197,94,.13)!important;color:#86efac}
+.opt.ng{border-color:var(--ng)!important;background:rgba(239,68,68,.12)!important;color:#fca5a5}
+.opt.reveal{border-color:var(--ok)!important;background:rgba(34,197,94,.05)!important}
+.opt-letter{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:var(--tc);flex-shrink:0}
+.streak-pop{height:24px;width:100%;text-align:center;font-size:.88rem;font-weight:700;color:#FBBF24;margin-bottom:8px;animation:fadeUp .3s ease}
+.feedback{display:none;width:100%;padding:13px 16px;border-radius:14px;font-size:.87rem;line-height:1.6;margin-bottom:12px;animation:popIn .32s cubic-bezier(.34,1.56,.64,1)}
+.feedback.ok{display:block;background:rgba(34,197,94,.13);border:1px solid rgba(34,197,94,.28);color:#86efac}
+.feedback.ng{display:block;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.28);color:#fca5a5}
+.btn-next{width:100%;padding:15px;background:var(--tc);border:none;border-radius:14px;color:#fff;font:700 1rem 'Rubik',sans-serif;cursor:pointer;transition:transform .12s,box-shadow .2s;box-shadow:0 3px 18px color-mix(in srgb,var(--tc) 40%,transparent);animation:fadeUp .3s ease}
+.btn-next:active{transform:scale(.97)}
+.xp-float{position:fixed;font-weight:900;font-size:1.7rem;color:#FBBF24;pointer-events:none;animation:xpup 1.3s ease-out forwards;z-index:999;text-shadow:0 0 14px rgba(251,191,36,.85);font-family:'Orbitron',sans-serif}
+@keyframes xpup{0%{opacity:1;transform:translateY(0) scale(1.2)}80%{opacity:.6}100%{opacity:0;transform:translateY(-90px) scale(.8)}}
+
+/* ═══ TOPIC END ═══ */
+.te-icon{font-size:4rem;text-align:center;margin:38px 0 12px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+.te-hed{font-size:1.45rem;font-weight:700;text-align:center;animation:fadeUp .4s .1s ease both}
+.te-sub{color:var(--dim);font-size:.88rem;text-align:center;margin-bottom:18px;animation:fadeUp .4s .15s ease both}
+.te-score{font-family:'Orbitron',sans-serif;font-size:clamp(3.2rem,15vw,5.5rem);font-weight:700;color:var(--tc);text-align:center;line-height:1;animation:popIn .5s .2s cubic-bezier(.34,1.56,.64,1) both;text-shadow:0 0 40px var(--tc)}
+.te-glow{animation:glow 2.2s ease-in-out infinite}
+@keyframes glow{0%,100%{text-shadow:0 0 20px var(--tc)}50%{text-shadow:0 0 60px var(--tc),0 0 100px var(--tc)}}
+.te-max{color:var(--dim);font-size:.82rem;text-align:center;margin-bottom:18px;animation:fadeUp .4s .25s ease both}
+.te-bd{width:100%;background:var(--sf);border:1px solid var(--br);border-radius:18px;padding:16px;margin-bottom:22px;display:flex;flex-direction:column;gap:10px;animation:fadeUp .4s .3s ease both;backdrop-filter:blur(8px)}
+.tb-row{display:flex;align-items:center;gap:9px;font-size:.84rem}
+.tb-stars{width:54px;flex-shrink:0}
+.tb-label{flex:1;color:var(--dim);font-size:.8rem}
+.tb-bar-w{width:70px;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;flex-shrink:0}
+.tb-bar-f{height:100%;background:var(--tc);border-radius:3px;transition:width .6s .4s ease}
+.tb-pts{width:46px;text-align:left;font-weight:700;color:var(--tc);font-size:.82rem;font-family:'Orbitron',sans-serif}
+.btn-cont{width:100%;padding:17px;background:var(--tc);border:none;border-radius:16px;color:#fff;font:700 1.05rem 'Rubik',sans-serif;cursor:pointer;box-shadow:0 4px 24px color-mix(in srgb,var(--tc) 40%,transparent);transition:transform .12s;animation:fadeUp .4s .35s ease both}
+.btn-cont:active{transform:scale(.97)}
+
+/* ═══ FINAL ═══ */
+.final-crown{font-size:4.5rem;text-align:center;margin:36px 0 8px;animation:popIn .6s cubic-bezier(.34,1.56,.64,1)}
+.final-name{font-size:1.7rem;font-weight:900;text-align:center;margin-bottom:4px;animation:fadeUp .5s .1s ease both}
+.final-sub{color:var(--dim);font-size:.88rem;text-align:center;margin-bottom:18px;animation:fadeUp .5s .15s ease both}
+.total-score{font-family:'Orbitron',sans-serif;font-size:clamp(3.8rem,17vw,6.5rem);font-weight:700;text-align:center;background:linear-gradient(135deg,#FBBF24,#F97316,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;animation:popIn .6s .2s cubic-bezier(.34,1.56,.64,1) both}
+.total-max{color:var(--dim);font-size:.82rem;text-align:center;margin-bottom:14px;animation:fadeUp .5s .25s ease both}
+.rank-badge{padding:8px 24px;border-radius:30px;font-size:.98rem;font-weight:700;text-align:center;margin-bottom:22px;border:2px solid;animation:popIn .5s .3s ease both}
+.final-bd{width:100%;display:flex;flex-direction:column;gap:9px;margin-bottom:26px}
+.fb-row{display:flex;align-items:center;gap:12px;background:var(--sf);border:1px solid var(--br);border-radius:14px;padding:12px 16px;animation:fadeUp .4s ease both}
+.fb-icon{font-size:1.4rem}
+.fb-name{flex:1;font-size:.87rem;font-weight:600}
+.fb-pct{font-size:.78rem;color:var(--dim)}
+.fb-score{font-family:'Orbitron',sans-serif;font-size:.83rem;font-weight:700}
+.btn-restart{width:100%;padding:17px;background:linear-gradient(135deg,#8B5CF6,#06B6D4);border:none;border-radius:16px;color:#fff;font:700 1.05rem 'Rubik',sans-serif;cursor:pointer;box-shadow:0 4px 24px rgba(139,92,246,.35);transition:transform .12s}
+.btn-restart:active{transform:scale(.97)}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+
+<!-- ══════ INTRO ══════ -->
+<div id="s-intro" class="screen on">
+  <div class="logo">מסע<br>הלשון</div>
+  <p class="logo-sub">תרגול לשון · כיתה ו׳ · 48 שאלות</p>
+  <div class="floaters">
+    <span style="--d:2.1s">🪐</span>
+    <span style="--d:2.7s">⭐</span>
+    <span style="--d:2.4s">🚀</span>
+    <span style="--d:3.1s">✨</span>
+  </div>
+  <label class="name-label">✏️ מה שמך?</label>
+  <input id="nameInp" class="name-inp" type="text" placeholder="כתוב/י את שמך כאן..." maxlength="20" oninput="onName(this.value)">
+  <button id="btnStart" class="btn-start" onclick="startGame()" disabled>🚀 יוצאים למסע!</button>
+  <div class="tp-preview">
+    <div class="tp-item" style="--tc:#8B5CF6">🔄 פעיל וסביל</div>
+    <div class="tp-item" style="--tc:#06B6D4">🔢 שם המספר</div>
+    <div class="tp-item" style="--tc:#10B981">🏗️ בניינים</div>
+    <div class="tp-item" style="--tc:#F59E0B">📝 כתיבת סיכום</div>
+  </div>
+</div>
+
+<!-- ══════ TOPIC INTRO ══════ -->
+<div id="s-ti" class="screen">
+  <div class="ti-wrap">
+    <div class="ti-icon" id="tiIcon"></div>
+    <div class="ti-ring"></div>
+    <div class="ti-ring2"></div>
+  </div>
+  <h1 class="ti-title" id="tiTitle"></h1>
+  <p class="ti-desc" id="tiDesc"></p>
+  <div class="diff-legend">
+    <div class="dl-row"><span class="dl-stars">⭐</span><span class="dl-label">קל · שאלות 1–4</span><span class="dl-pts">10 נקודות לשאלה</span></div>
+    <div class="dl-row"><span class="dl-stars">⭐⭐</span><span class="dl-label">בינוני · שאלות 5–8</span><span class="dl-pts">20 נקודות לשאלה</span></div>
+    <div class="dl-row"><span class="dl-stars">⭐⭐⭐</span><span class="dl-label">מאתגר · שאלות 9–12</span><span class="dl-pts">30 נקודות לשאלה</span></div>
+  </div>
+  <p class="ti-num" id="tiNum"></p>
+  <button class="btn-go" onclick="beginTopic()">יאללה מתחילים! 🚀</button>
+</div>
+
+<!-- ══════ QUIZ ══════ -->
+<div id="s-quiz" class="screen">
+  <div class="qz-top">
+    <span class="qz-label" id="qLabel"></span>
+    <span class="qz-sbox" id="qScore">0</span>
+  </div>
+  <div class="prog-wrap"><div class="prog-fill" id="qProg"></div></div>
+  <div class="q-meta">
+    <span class="q-counter" id="qCounter"></span>
+    <span class="diff-badge" id="qDiff"></span>
+  </div>
+  <div class="q-card"><p class="q-text" id="qText"></p></div>
+  <div class="opts" id="optsEl"></div>
+  <div class="streak-pop" id="streakEl" style="visibility:hidden"></div>
+  <div class="feedback" id="fbEl"></div>
+  <button class="btn-next" id="btnNext" onclick="nextQ()" style="display:none">המשך ←</button>
+</div>
+
+<!-- ══════ TOPIC END ══════ -->
+<div id="s-te" class="screen">
+  <div class="te-icon" id="teIcon"></div>
+  <h2 class="te-hed" id="teHed"></h2>
+  <p class="te-sub" id="teSub"></p>
+  <div class="te-score te-glow" id="teScore"></div>
+  <p class="te-max" id="teMax"></p>
+  <div class="te-bd" id="teBD"></div>
+  <button class="btn-cont" id="btnCont" onclick="goNext()"></button>
+</div>
+
+<!-- ══════ FINAL ══════ -->
+<div id="s-final" class="screen">
+  <div class="final-crown" id="fCrown"></div>
+  <h2 class="final-name" id="fName"></h2>
+  <p class="final-sub">השלמת את מסע הלשון! 🎉</p>
+  <div class="total-score" id="fTotal"></div>
+  <p class="total-max" id="fMax"></p>
+  <div class="rank-badge" id="fRank"></div>
+  <div class="final-bd" id="fBD"></div>
+  <button class="btn-restart" onclick="restartGame()">🔄 שחק שוב</button>
+</div>
+
+<script>
+/* ═══════════════════════════ DATA ═══════════════════════════ */
+const TOPICS = [
+  {
+    name:'פעיל וסביל', icon:'🔄', color:'#8B5CF6',
+    desc:'מזהים פעיל וסביל, מבינים את ההבדל והופכים משפטים.',
+    qs:[
+      // ⭐ EASY 1-4
+      {t:'המשפט "הילד אכל את התפוח" — פעיל או סביל?',
+       o:['פָּעִיל','סָבִיל'],a:0,
+       e:'הנושא "הילד" עושה את הפעולה — זה פעיל!'},
+      {t:'המשפט "הספר נכתב על ידי הסופרת" — פעיל או סביל?',
+       o:['פָּעִיל','סָבִיל'],a:1,
+       e:'"נכתב" = הנושא סובל את הפעולה — זה סביל!'},
+      {t:'המשפט "המורה הסבירה את השיעור" — פעיל או סביל?',
+       o:['פָּעִיל','סָבִיל'],a:0,
+       e:'המורה עושה את הפעולה — זה פעיל!'},
+      {t:'המשפט "הכדור נזרק לשער" — פעיל או סביל?',
+       o:['פָּעִיל','סָבִיל'],a:1,
+       e:'"נזרק" = הכדור סובל את הפעולה — זה סביל!'},
+      // ⭐⭐ MEDIUM 5-8
+      {t:'מי עושה את הפעולה במשפט:\n"הכיסא נצבע על ידי הנגר"?',
+       o:['הכיסא','הנגר','הצבע','אין פועל'],a:1,
+       e:'"על ידי הנגר" — הנגר הוא הגורם לפעולה!'},
+      {t:'השלם: "המכתב ___ (שלח) על ידי המנהל"',
+       o:['שָׁלַח','נִשְׁלַח','יִשְׁלַח','שׁוֹלֵחַ'],a:1,
+       e:'במשפט סביל: נ + שורש. המכתב נִשְׁלַח.'},
+      {t:'הפוך לסביל: "הנגר בנה את הארון"',
+       o:['הארון נבנה על ידי הנגר','הנגר נבנה את הארון','הארון בנה את הנגר','הנגר בנה על ידי הארון'],a:0,
+       e:'המושא הופך לנושא, הפועל לסביל, ומוסיפים "על ידי"'},
+      {t:'איזה מהמשפטים הוא סביל?',
+       o:['הכלב נשך את הדואר','האוכל בושל ביום שישי','הילדה רצה במגרש','המורה נתנה שיעורי בית'],a:1,
+       e:'"בושל" = פועל סביל. האוכל סובל את הפעולה!'},
+      // ⭐⭐⭐ HARD 9-12
+      {t:'"הדוח הוגש בזמן" — מה אפשר להוסיף למשפט?',
+       o:['"על ידי העובד"','"את העובד"','"לעובד"','"עם העובד"'],a:0,
+       e:'במשפט סביל — הגורם מגיע עם "על ידי"'},
+      {t:'הפוך לפעיל:\n"הפרויקט תוכנן על ידי הצוות"',
+       o:['הצוות תיכנן את הפרויקט','הפרויקט תיכנן את הצוות','הצוות תוכנן את הפרויקט','הפרויקט תוכנן הצוות'],a:0,
+       e:'"על ידי הצוות" הופך לנושא פועל, "תיכנן" = פועל פעיל'},
+      {t:'מה ההבדל העיקרי בין פעיל לסביל?',
+       o:['בפעיל הנושא עושה; בסביל הנושא סובל את הפעולה','פעיל הוא תמיד בהווה; סביל הוא בעבר','לפעיל יש מושא; לסביל אין','בסביל תמיד יש "על ידי"'],a:0,
+       e:'בפעיל = הנושא עושה. בסביל = הנושא סובל. זוהי ההגדרה!'},
+      {t:'מי מהמשפטים הפך נכון מ"הילדים בנו את הסכר"?',
+       o:['הסכר נבנה על ידי הילדים','הסכר בנה את הילדים','הילדים נבנו את הסכר','הסכר בנו על ידי הילדים'],a:0,
+       e:'"הסכר" = נושא, "נבנה" = פועל סביל, "על ידי הילדים" = הגורם'}
+    ]
+  },
+  {
+    name:'שם המספר', icon:'🔢', color:'#06B6D4',
+    desc:'זכר ונקבה, מספר בסיסי וסדורי, ונסמך — כל הצורות.',
+    qs:[
+      // ⭐ EASY 1-4
+      {t:'בחר נכון: "יש לי ___ אחים" (3)',
+       o:['שָׁלוֹשׁ','שְׁלוֹשָׁה'],a:1,
+       e:'"אחים" = זכר רבים ← שְׁלוֹשָׁה'},
+      {t:'בחר נכון: "קניתי ___ מחברות" (5)',
+       o:['חֲמִישָּׁה','חָמֵשׁ'],a:1,
+       e:'"מחברות" = נקבה ← חָמֵשׁ'},
+      {t:'בחר נכון: "יש בכיתה ___ ילדים" (7)',
+       o:['שִׁבְעָה','שֶׁבַע'],a:0,
+       e:'"ילדים" = זכר ← שִׁבְעָה'},
+      {t:'בחר נכון: "על הדף יש ___ שאלות" (2)',
+       o:['שְׁנַיִם','שְׁתַּיִם'],a:1,
+       e:'"שאלות" = נקבה ← שְׁתַּיִם'},
+      // ⭐⭐ MEDIUM 5-8
+      {t:'בחר נכון: "קניתי ___ עפרונות" (4)',
+       o:['אַרְבַּע','אַרְבָּעָה'],a:1,
+       e:'"עפרונות" = זכר רבים ← אַרְבָּעָה'},
+      {t:'בחר נכון: "בבית יש ___ חדרים" (6)',
+       o:['שֵׁשׁ','שִׁישָּׁה'],a:1,
+       e:'"חדרים" = זכר ← שִׁישָּׁה'},
+      {t:'בחר את שם המספר הסדורי:\n"הוא סיים במקום ה___ (1)"',
+       o:['אֶחָד','רִאשׁוֹן','רִאשׁוֹנָה','אַחַת'],a:1,
+       e:'"מקום" = זכר, מספר סדורי ← רִאשׁוֹן'},
+      {t:'בחר את שם המספר הסדורי הנכון:\n"היא קפצה ___ (מקום 3)"',
+       o:['שְׁלִישִׁי','שְׁלִישִׁית','שָׁלוֹשׁ','שְׁלוֹשָׁה'],a:1,
+       e:'"היא" = נקבה, מספר סדורי ← שְׁלִישִׁית'},
+      // ⭐⭐⭐ HARD 9-12
+      {t:'שם מספר בנסמך: "___ הילדים" (3)',
+       o:['שְׁלוֹשָׁה','שָׁלוֹשׁ','שְׁלֹשֶׁת','שְׁלֹשְׁתָּם'],a:2,
+       e:'לפני "ה" — צורת הנסמך: שְׁלֹשֶׁת הילדים'},
+      {t:'"___ הבנות" (5 — בנסמך)',
+       o:['חָמֵשׁ','חֲמִישָּׁה','חֲמֵשֶׁת','חָמֵשׁ הַ'],a:2,
+       e:'נסמך לפני "הבנות" ← חֲמֵשֶׁת'},
+      {t:'מה שגוי במשפט: "ראיתי שלוש ילדים"?',
+       o:['"ילדים" = זכר, צריך שְׁלוֹשָׁה','"ראיתי" צריך להיות "ראה"','"שלוש" כתוב לא נכון','אין שגיאה במשפט'],a:0,
+       e:'"ילדים" = זכר ← שְׁלוֹשָׁה ילדים!'},
+      {t:'"קראתי את ___ הספרים" (3) — מה נכון?',
+       o:['שְׁלֹשֶׁת','שְׁלוֹשָׁה','שָׁלוֹשׁ','הַשְׁלוֹשָׁה'],a:0,
+       e:'לפני "ה" מוגדר = נסמך: שְׁלֹשֶׁת הספרים'}
+    ]
+  },
+  {
+    name:'בניינים', icon:'🏗️', color:'#10B981',
+    desc:'שבעת הבניינים של הפועל העברי — לזהות, להבין ולהטות.',
+    qs:[
+      // ⭐ EASY 1-4
+      {t:'לאיזה בניין שייך הפועל "כָּתַב"?',
+       o:['פָּעַל','פִּיעֵל','הִפְעִיל','נִפְעַל'],a:0,
+       e:'צורה בסיסית, שלוש אותיות שורש — בניין פָּעַל!'},
+      {t:'לאיזה בניין שייך "דִּיבֵּר"?',
+       o:['פָּעַל','פִּיעֵל','הִפְעִיל','נִפְעַל'],a:1,
+       e:'דגש חזק באות האמצעית = בניין פִּיעֵל'},
+      {t:'לאיזה בניין שייך "הֵבִין"?',
+       o:['פָּעַל','פִּיעֵל','הִפְעִיל','נִפְעַל'],a:2,
+       e:'קידומת "הֵ" בעבר = בניין הִפְעִיל'},
+      {t:'לאיזה בניין שייך "נִכְנַס"?',
+       o:['פָּעַל','פִּיעֵל','הִפְעִיל','נִפְעַל'],a:3,
+       e:'קידומת "נִ" = בניין נִפְעַל'},
+      // ⭐⭐ MEDIUM 5-8
+      {t:'לאיזה בניין שייך "הִתְלַבֵּשׁ"?',
+       o:['הִפְעִיל','הִתְפַּעֵל','פִּיעֵל','פֻּעַל'],a:1,
+       e:'קידומת "הִתְ" = בניין הִתְפַּעֵל (פעולה שאדם עושה לעצמו)'},
+      {t:'לאיזה בניין שייך "שֻׁבַּח"?',
+       o:['פִּיעֵל','פֻּעַל','הֻפְעַל','נִפְעַל'],a:1,
+       e:'קיבוץ + דגש = בניין פֻּעַל (הסביל של פִּיעֵל)'},
+      {t:'מה המאפיין של בניין הִפְעִיל?',
+       o:['גורם לאחר לעשות פעולה','פעולה חוזרת על עצמה','פעולה שנעשית לנושא','פעולה בסיסית פשוטה'],a:0,
+       e:'הִפְעִיל = גרמתי לאחר לעשות. "הִשְׁכִּיב" = גרם לשכב'},
+      {t:'לאיזה בניין שייך "לִמֵּד"?',
+       o:['פָּעַל','פִּיעֵל','הִפְעִיל','הִתְפַּעֵל'],a:1,
+       e:'דגש חזק בפ"ה (מ׳ הכפולה) = בניין פִּיעֵל'},
+      // ⭐⭐⭐ HARD 9-12
+      {t:'מה ההבדל בין "שָׁבַר" (פָּעַל) ל"שִׁבֵּר" (פִּיעֵל)?',
+       o:['"שָׁבַר" = פעולה רגילה; "שִׁבֵּר" = פעולה חזקה/חוזרת','"שָׁבַר" = עבר; "שִׁבֵּר" = הווה','"שָׁבַר" = זכר; "שִׁבֵּר" = נקבה','אין הבדל ביניהם'],a:0,
+       e:'פִּיעֵל מגביר לעיתים את הפעולה. "שִׁבֵּר" = שבר לרסיסים'},
+      {t:'לאיזה בניין שייך "הוּבַן"?',
+       o:['הֻפְעַל','נִפְעַל','פֻּעַל','הִפְעִיל'],a:0,
+       e:'"הוּ" + חולם = בניין הֻפְעַל (הסביל של הִפְעִיל)'},
+      {t:'מה הצורה הנכונה של "כתב" בהפעיל\n(עבר, הוא)?',
+       o:['הִכְתִּיב','הִכְתַּב','כִּתֵּב','כּוֹתֵב'],a:0,
+       e:'"הִכְתִּיב" = גרם לכתוב. הִפְעִיל: הִ + שורש + יב'},
+      {t:'"הוא הִסְתַּכֵּל בחלון" — לאיזה בניין?',
+       o:['הִתְפַּעֵל','הִפְעִיל','נִפְעַל','פִּיעֵל'],a:0,
+       e:'"הִסְתַּ" = הִתְפַּעֵל עם טמיעה (הִתְ + כ.כ.ל ← הִסְתַּכֵּל)'}
+    ]
+  },
+  {
+    name:'כתיבת סיכום', icon:'📝', color:'#F59E0B',
+    desc:'מה מטרת הסיכום? מה כוללים, מה משמיטים, ואיך בונים אחד ברור.',
+    qs:[
+      // ⭐ EASY 1-4
+      {t:'מה מטרת הסיכום?',
+       o:['לכתוב מחדש את הטקסט בקצרה ובמילים שלי','להוסיף את הדעה האישית שלי','לכתוב את כל הטקסט המקורי','לשנות את נושא הטקסט'],a:0,
+       e:'סיכום = ניסוח קצר של הרעיונות הראשיים במילים שלנו'},
+      {t:'האם מותר לכתוב דעות אישיות בסיכום?',
+       o:['כן, תמיד','לא — סיכום מתבסס רק על הטקסט'],a:1,
+       e:'בסיכום — רק מה שכתוב בטקסט. ללא דעות אישיות!'},
+      {t:'מה כותבים בפסקה הראשונה של הסיכום?',
+       o:['הנושא הראשי של הטקסט','כל הפרטים של הטקסט','הדעה שלנו על הטקסט','ציטוטים מהטקסט'],a:0,
+       e:'פתיחה = הנושא הכללי. אחר כך הרעיונות, ולבסוף מסקנה'},
+      {t:'כמה חלקים יש בדרך כלל בסיכום?',
+       o:['חלק אחד','שני חלקים','שלושה חלקים','ארבעה חלקים'],a:2,
+       e:'פתיחה + גוף (רעיונות) + סיום/מסקנה = 3 חלקים'},
+      // ⭐⭐ MEDIUM 5-8
+      {t:'מה זה "רעיון מרכזי" של פסקה?',
+       o:['המסר החשוב ביותר שהכותב רוצה להעביר','המשפט הראשון בפסקה תמיד','הדוגמאות שבפסקה','השאלות שהכותב שואל'],a:0,
+       e:'הרעיון המרכזי = מה שהכותב הכי רצה להגיד בפסקה'},
+      {t:'אילו מילות קישור מתאימות לסיכום?',
+       o:['"לכן, בנוסף, לסיכום, לאחר מכן"','"אז, בסדר, טוב, ואז"','"נגד, מול" בלבד','"מכיוון ש..." בלבד'],a:0,
+       e:'מילות קישור עוזרות לחבר רעיונות בצורה ברורה ומסודרת'},
+      {t:'מה הסדר הנכון של כתיבת סיכום?',
+       o:['קרא ← זהה רעיונות ← כתוב ← בדוק','כתוב ← קרא ← שנה','זהה ← כתוב ← קרא','קרא ← כתוב הכל ← בחר'],a:0,
+       e:'תמיד קודם קוראים, מזהים, כותבים ואז בודקים'},
+      {t:'מה לא מתאים לכלול בסיכום?',
+       o:['פרטים שוליים ודוגמאות קטנות','הרעיון המרכזי','הנושאים העיקריים','מסקנות הכותב'],a:0,
+       e:'בסיכום — רק רעיונות ראשיים! פרטים קטנים = לא חובה'},
+      // ⭐⭐⭐ HARD 9-12
+      {t:'קרא: "הדולפינים הם יונקים חכמים. הם חיים בקבוצות ומתקשרים בקולות. מחקרים מראים שהם מזהים עצמם במראה."\n— מה הרעיון המרכזי?',
+       o:['הדולפינים הם יצורים חכמים בעלי יכולות מתקדמות','הדולפינים מתקשרים בקולות','הדולפינים רואים את עצמם במראה','הדולפינים חיים בים'],a:0,
+       e:'הרעיון שמאחד את כל המשפטים = חכמה ויכולות מתקדמות'},
+      {t:'קרא: "הים התיכון עשיר במגוון ביולוגי. מאות מינים חיים בו. אך זיהום המים מסכן את כולם."\n— איזה סיכום נכון?',
+       o:['הים התיכון עשיר בחיים אך נמצא בסכנת זיהום','בים התיכון יש הרבה דגים','הזיהום הכחיד את כל היצורים','הים התיכון הוא הים הגדול ביותר'],a:0,
+       e:'סיכום טוב לוכד שני הרעיונות: העושר הביולוגי + הסכנה'},
+      {t:'איזה מהסיכומים כתוב הכי נכון?',
+       o:['הטקסט עוסק בחשיבות שמירת הטבע לצורך קיום בריא','הטקסט אומר שהטבע מאוד יפה וחשוב לכולנו ולכן תמיד צריך לשמור עליו','לדעתי הטבע חשוב כי אני אוהב לטייל בטבע','הטקסט כתוב יפה ומעניין מאוד'],a:0,
+       e:'קצר, ממוקד, ובמילים שלנו — זה הסיכום הנכון!'},
+      {t:'"לסיכום, הטקסט עוסק ב___" — מה ממלאים?',
+       o:['הנושא הכללי ומסקנת הטקסט','כל פרטי הטקסט','הדעה האישית שלנו','ציטוט ישיר מהטקסט'],a:0,
+       e:'פסקת הסיום = הנושא הכולל + המסקנה העיקרית'}
+    ]
+  }
+];
+
+const MAX_PER = 240; // 4×10 + 4×20 + 4×30
+const LETTERS = ['א','ב','ג','ד'];
+
+/* ═══════════════════════════ STATE ═══════════════════════════ */
+let st = {
+  name:'', ti:0, qi:0,
+  tScore:0, tCorrect:[0,0,0],
+  total:0, tScores:[0,0,0,0],
+  streak:0
+};
+
+/* ═══════════════════════════ STARS ═══════════════════════════ */
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<90;i++){
+    const el=document.createElement('div');
+    el.className='star';
+    const s=Math.random()*2+.4;
+    el.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;animation-delay:${Math.random()*-8}s`;
+    c.appendChild(el);
+  }
+})();
+
+/* ═══════════════════════════ UTILS ═══════════════════════════ */
+const $=id=>document.getElementById(id);
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  $(id).classList.add('on');
+  window.scrollTo(0,0);
+}
+function setTC(c){document.documentElement.style.setProperty('--tc',c)}
+function pts(){return st.qi<4?10:st.qi<8?20:30}
+function diffTxt(){return st.qi<4?'⭐ קל':st.qi<8?'⭐⭐ בינוני':'⭐⭐⭐ מאתגר'}
+
+function playSound(ok){
+  try{
+    const ctx=new AudioContext();
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    if(ok){
+      o.type='sine';
+      o.frequency.setValueAtTime(523,ctx.currentTime);
+      o.frequency.setValueAtTime(659,ctx.currentTime+.12);
+      o.frequency.setValueAtTime(784,ctx.currentTime+.24);
+      g.gain.setValueAtTime(.16,ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.65);
+    }else{
+      o.type='sawtooth';
+      o.frequency.setValueAtTime(220,ctx.currentTime);
+      o.frequency.setValueAtTime(165,ctx.currentTime+.18);
+      g.gain.setValueAtTime(.12,ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.4);
+    }
+    o.start();o.stop(ctx.currentTime+.7);
+  }catch(e){}
+}
+
+function floatXP(el,val){
+  const r=el.getBoundingClientRect();
+  const f=document.createElement('div');
+  f.className='xp-float';
+  f.textContent='+'+val;
+  f.style.left=(r.left+r.width/2-22)+'px';
+  f.style.top=(r.top+window.scrollY-10)+'px';
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(),1400);
+}
+
+/* ═══════════════════════════ INTRO ═══════════════════════════ */
+function onName(v){$('btnStart').disabled=v.trim().length<2}
+$('nameInp').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&$('nameInp').value.trim().length>=2)startGame();
+});
+function startGame(){
+  st.name=$('nameInp').value.trim();
+  st.ti=0;st.total=0;st.tScores=[0,0,0,0];
+  showTopicIntro();
+}
+
+/* ═══════════════════════════ TOPIC INTRO ═══════════════════════════ */
+function showTopicIntro(){
+  const tp=TOPICS[st.ti];
+  setTC(tp.color);
+  $('tiIcon').textContent=tp.icon;
+  $('tiTitle').textContent=tp.name;
+  $('tiDesc').textContent=tp.desc;
+  $('tiNum').textContent=`נושא ${st.ti+1} מתוך ${TOPICS.length}`;
+  show('s-ti');
+}
+function beginTopic(){
+  st.qi=0;st.tScore=0;st.tCorrect=[0,0,0];st.streak=0;
+  renderQ();
+  show('s-quiz');
+}
+
+/* ═══════════════════════════ QUIZ ═══════════════════════════ */
+function renderQ(){
+  const tp=TOPICS[st.ti];
+  const q=tp.qs[st.qi];
+  setTC(tp.color);
+
+  $('qLabel').textContent=tp.icon+' '+tp.name;
+  $('qScore').textContent=st.tScore;
+  $('qProg').style.width=Math.round((st.qi/12)*100)+'%';
+  $('qCounter').textContent=`שאלה ${st.qi+1} מתוך 12`;
+  $('qDiff').textContent=diffTxt();
+  $('qText').textContent=q.t;
+
+  const opts=$('optsEl');
+  opts.innerHTML='';
+  q.o.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn.innerHTML=`<span class="opt-letter">${LETTERS[i]}</span><span>${opt}</span>`;
+    btn.onclick=e=>selectAns(i,btn);
+    opts.appendChild(btn);
+  });
+
+  $('fbEl').className='feedback';
+  $('streakEl').style.visibility='hidden';
+  $('btnNext').style.display='none';
+
+  // re-trigger animation
+  const card=$('qCard');
+  card.style.animation='none';
+  void card.offsetHeight;
+  card.style.animation='slideUp .32s ease';
+}
+
+function selectAns(idx,btn){
+  const q=TOPICS[st.ti].qs[st.qi];
+  const correct=idx===q.a;
+
+  document.querySelectorAll('.opt').forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.a) b.classList.add('ok');
+    else if(i===idx&&!correct) b.classList.add('ng');
+  });
+
+  const fb=$('fbEl');
+  if(correct){
+    const p=pts();
+    st.tScore+=p; st.total+=p;
+    st.tCorrect[st.qi<4?0:st.qi<8?1:2]++;
+    st.streak++;
+    fb.className='feedback ok';
+    fb.textContent=`✅ נכון! ${q.e}`;
+    playSound(true);
+    floatXP(btn,p);
+    const sb=$('qScore');
+    sb.textContent=st.tScore;
+    sb.classList.remove('bump');void sb.offsetHeight;sb.classList.add('bump');
+    if(st.streak>=3){
+      const sp=$('streakEl');
+      sp.style.visibility='visible';
+      sp.textContent=`🔥 ${st.streak} ברצף!`;
+    }
+  }else{
+    st.streak=0;
+    $('streakEl').style.visibility='hidden';
+    fb.className='feedback ng';
+    fb.textContent=`❌ לא נכון. התשובה הנכונה: ${q.o[q.a]}. ${q.e}`;
+    playSound(false);
+  }
+
+  $('btnNext').style.display='block';
+}
+
+function nextQ(){
+  st.qi++;
+  if(st.qi>=12) showTopicEnd();
+  else renderQ();
+}
+
+/* ═══════════════════════════ TOPIC END ═══════════════════════════ */
+function showTopicEnd(){
+  const tp=TOPICS[st.ti];
+  setTC(tp.color);
+  st.tScores[st.ti]=st.tScore;
+  const pct=Math.round(st.tScore/MAX_PER*100);
+
+  let medal='💪';
+  if(pct>=90) medal='🏆';
+  else if(pct>=75) medal='🥇';
+  else if(pct>=55) medal='🥈';
+
+  $('teIcon').textContent=medal;
+  $('teHed').textContent=pct>=70?'כל הכבוד! 🎉':'לא רע! המשך/י להתאמן 💪';
+  $('teSub').textContent=tp.name;
+  $('teScore').textContent=st.tScore;
+  $('teMax').textContent=`מתוך ${MAX_PER} נקודות (${pct}%)`;
+
+  const lvs=['⭐','⭐⭐','⭐⭐⭐'];
+  const lbls=['קל (4 שאלות)','בינוני (4 שאלות)','מאתגר (4 שאלות)'];
+  const mults=[10,20,30];
+  let bd='';
+  st.tCorrect.forEach((c,i)=>{
+    const p=c*mults[i];
+    const barW=Math.round(c/4*100);
+    bd+=`<div class="tb-row">
+      <span class="tb-stars">${lvs[i]}</span>
+      <span class="tb-label">${lbls[i]} · ${c}/4</span>
+      <div class="tb-bar-w"><div class="tb-bar-f" style="width:${barW}%"></div></div>
+      <span class="tb-pts">${p}</span>
+    </div>`;
+  });
+  $('teBD').innerHTML=bd;
+
+  const isLast=st.ti>=TOPICS.length-1;
+  $('btnCont').textContent=isLast?'לתוצאה הסופית 🏁':`הנושא הבא: ${TOPICS[st.ti+1].name} →`;
+  show('s-te');
+}
+
+function goNext(){
+  st.ti++;
+  if(st.ti>=TOPICS.length) showFinal();
+  else showTopicIntro();
+}
+
+/* ═══════════════════════════ FINAL ═══════════════════════════ */
+function showFinal(){
+  setTC('#FBBF24');
+  const max=MAX_PER*TOPICS.length;
+  const pct=Math.round(st.total/max*100);
+
+  let crown,rank,rc;
+  if(pct>=90){crown='🏆';rank='אלוף/ת הלשון! 👑';rc='#FBBF24'}
+  else if(pct>=75){crown='🥇';rank='מומחה/ית לשון! 🌟';rc='#F59E0B'}
+  else if(pct>=60){crown='🥈';rank='בקיא/ת בלשון! ⭐';rc='#A855F7'}
+  else if(pct>=45){crown='🥉';rank='בדרך הנכונה! 💪';rc='#06B6D4'}
+  else{crown='📚';rank='יש להתאמן עוד! 📖';rc='#8888AA'}
+
+  $('fCrown').textContent=crown;
+  $('fName').textContent=st.name;
+  $('fTotal').textContent=st.total;
+  $('fMax').textContent=`מתוך ${max} נקודות (${pct}%)`;
+
+  const rb=$('fRank');
+  rb.textContent=rank;
+  rb.style.cssText=`color:${rc};border-color:${rc};background:${rc}18`;
+
+  let bd='';
+  TOPICS.forEach((tp,i)=>{
+    const p=st.tScores[i];
+    const tpct=Math.round(p/MAX_PER*100);
+    bd+=`<div class="fb-row" style="animation-delay:${i*.08}s">
+      <span class="fb-icon">${tp.icon}</span>
+      <span class="fb-name">${tp.name}</span>
+      <span class="fb-pct">${tpct}%</span>
+      <span class="fb-score" style="color:${tp.color}">${p}/${MAX_PER}</span>
+    </div>`;
+  });
+  $('fBD').innerHTML=bd;
+  show('s-final');
+}
+
+function restartGame(){
+  st={name:'',ti:0,qi:0,tScore:0,tCorrect:[0,0,0],total:0,tScores:[0,0,0,0],streak:0};
+  $('nameInp').value='';
+  $('btnStart').disabled=true;
+  setTC('#8B5CF6');
+  show('s-intro');
+}
+</script>
+</body>
+</html>
