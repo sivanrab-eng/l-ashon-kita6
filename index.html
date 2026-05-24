@@ -90,8 +90,32 @@ button{touch-action:manipulation}
 .feedback.ng{display:block;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.28);color:#fca5a5}
 .btn-next{width:100%;padding:15px;background:var(--tc);border:none;border-radius:14px;color:#fff;font:700 1rem 'Rubik',sans-serif;cursor:pointer;transition:transform .12s,box-shadow .2s;box-shadow:0 3px 18px color-mix(in srgb,var(--tc) 40%,transparent);animation:fadeUp .3s ease}
 .btn-next:active{transform:scale(.97)}
+.hint-row{width:100%;display:flex;justify-content:flex-end;margin-bottom:8px}
+.btn-hint{padding:7px 16px;background:rgba(251,191,36,.1);border:1.5px solid rgba(251,191,36,.35);border-radius:20px;color:#FBBF24;font:600 .82rem 'Rubik',sans-serif;cursor:pointer;transition:background .2s,opacity .2s}
+.btn-hint:hover{background:rgba(251,191,36,.2)}
+.btn-hint:disabled{opacity:.35;cursor:default}
+.opt.eliminated{opacity:.3;text-decoration:line-through;pointer-events:none;cursor:default}
+.feedback{display:none;width:100%;padding:14px 16px;border-radius:16px;font-size:.87rem;line-height:1.7;margin-bottom:12px;animation:popIn .32s cubic-bezier(.34,1.56,.64,1)}
+.feedback.ok{display:block;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.28)}
+.feedback.ng{display:block;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.28)}
+.fb-result{font-size:1rem;font-weight:700;margin-bottom:6px}
+.fb-ok .fb-result{color:#4ade80}
+.fb-ng .fb-result{color:#f87171}
+.fb-chosen{font-size:.82rem;margin-bottom:4px;color:var(--dim)}
+.fb-correct{font-size:.82rem;margin-bottom:8px;color:#86efac;font-weight:600}
+.fb-explain{font-size:.85rem;line-height:1.7;padding:10px 12px;background:rgba(255,255,255,.05);border-radius:10px;border-right:3px solid var(--tc);color:var(--tx)}
 .xp-float{position:fixed;font-weight:900;font-size:1.7rem;color:#FBBF24;pointer-events:none;animation:xpup 1.3s ease-out forwards;z-index:999;text-shadow:0 0 14px rgba(251,191,36,.85);font-family:'Orbitron',sans-serif}
 @keyframes xpup{0%{opacity:1;transform:translateY(0) scale(1.2)}80%{opacity:.6}100%{opacity:0;transform:translateY(-90px) scale(.8)}}
+/* ═══ ERROR REPORT ═══ */
+.err-section{width:100%;margin-bottom:20px;animation:fadeUp .4s .35s ease both}
+.err-toggle{width:100%;padding:12px 16px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:14px;color:#f87171;font:600 .88rem 'Rubik',sans-serif;cursor:pointer;text-align:right;display:flex;justify-content:space-between;align-items:center}
+.err-toggle.none{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.2);color:#4ade80;cursor:default}
+.err-list{display:none;margin-top:10px;display:flex;flex-direction:column;gap:10px}
+.err-item{background:var(--sf);border:1px solid rgba(239,68,68,.2);border-radius:14px;padding:13px 14px;border-right:3px solid #ef4444}
+.err-q{font-size:.83rem;font-weight:600;color:var(--tx);margin-bottom:6px;line-height:1.5;white-space:pre-line}
+.err-chosen{font-size:.78rem;color:#f87171;margin-bottom:3px}
+.err-correct{font-size:.78rem;color:#4ade80;margin-bottom:6px;font-weight:600}
+.err-exp{font-size:.78rem;color:var(--dim);line-height:1.6;padding:7px 10px;background:rgba(255,255,255,.04);border-radius:8px}
 
 /* ═══ TOPIC END ═══ */
 .te-icon{font-size:4rem;text-align:center;margin:38px 0 12px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
@@ -189,6 +213,7 @@ button{touch-action:manipulation}
     <span class="diff-badge" id="qDiff"></span>
   </div>
   <div class="q-card"><p class="q-text" id="qText"></p></div>
+  <div class="hint-row"><button class="btn-hint" id="btnHint" onclick="useHint()">💡 רמז</button></div>
   <div class="opts" id="optsEl"></div>
   <div class="streak-pop" id="streakEl" style="visibility:hidden"></div>
   <div class="feedback" id="fbEl"></div>
@@ -203,6 +228,7 @@ button{touch-action:manipulation}
   <div class="te-score te-glow" id="teScore"></div>
   <p class="te-max" id="teMax"></p>
   <div class="te-bd" id="teBD"></div>
+  <div class="err-section" id="errSection"></div>
   <button class="btn-cont" id="btnCont" onclick="goNext()"></button>
 </div>
 
@@ -726,7 +752,7 @@ let st = {
   name:'', ti:0, qi:0,
   tScore:0, tCorrect:[0,0,0],
   total:0, tScores:[0,0,0,0,0,0,0,0,0,0,0],
-  streak:0
+  streak:0, tErrors:[], hintUsed:false
 };
 
 /* ═══════════════════════════ STARS ═══════════════════════════ */
@@ -793,7 +819,7 @@ $('nameInp').addEventListener('keydown',e=>{
 });
 function startGame(){
   st.name=$('nameInp').value.trim();
-  st.ti=0;st.total=0;st.tScores=[0,0,0,0];
+  st.ti=0;st.total=0;st.tScores=[0,0,0,0,0,0,0,0,0,0,0];
   showTopicIntro();
 }
 
@@ -808,7 +834,7 @@ function showTopicIntro(){
   show('s-ti');
 }
 function beginTopic(){
-  st.qi=0;st.tScore=0;st.tCorrect=[0,0,0];st.streak=0;
+  st.qi=0;st.tScore=0;st.tCorrect=[0,0,0];st.streak=0;st.tErrors=[];
   renderQ();
   show('s-quiz');
 }
@@ -839,15 +865,38 @@ function renderQ(){
   $('fbEl').className='feedback';
   $('streakEl').style.visibility='hidden';
   $('btnNext').style.display='none';
+  st.hintUsed=false;
+  const hb=$('btnHint');
+  hb.disabled=false;
+  hb.textContent='💡 רמז';
 
   // re-trigger animation
   const card=document.querySelector('.q-card');
   if(card){card.style.animation='none';void card.offsetHeight;card.style.animation='slideUp .32s ease';}
 }
 
+function useHint(){
+  if(st.hintUsed) return;
+  st.hintUsed=true;
+  const q=TOPICS[st.ti].qs[st.qi];
+  const opts=document.querySelectorAll('.opt');
+  // collect wrong indices that are still active
+  const wrongs=[...opts].map((_,i)=>i).filter(i=>i!==q.a&&!opts[i].disabled&&!opts[i].classList.contains('eliminated'));
+  if(!wrongs.length) return;
+  const pick=wrongs[Math.floor(Math.random()*wrongs.length)];
+  opts[pick].classList.add('eliminated');
+  opts[pick].disabled=true;
+  const hb=$('btnHint');
+  hb.disabled=true;
+  hb.textContent='💡 נוצל';
+}
+
 function selectAns(idx,btn){
   const q=TOPICS[st.ti].qs[st.qi];
   const correct=idx===q.a;
+
+  // disable hint
+  $('btnHint').disabled=true;
 
   document.querySelectorAll('.opt').forEach((b,i)=>{
     b.disabled=true;
@@ -856,13 +905,17 @@ function selectAns(idx,btn){
   });
 
   const fb=$('fbEl');
+  fb.innerHTML='';
+
   if(correct){
     const p=pts();
     st.tScore+=p; st.total+=p;
     st.tCorrect[st.qi<4?0:st.qi<8?1:2]++;
     st.streak++;
-    fb.className='feedback ok';
-    fb.textContent=`✅ נכון! ${q.e}`;
+    fb.className='feedback ok fb-ok';
+    fb.innerHTML=`
+      <div class="fb-result">✅ תשובה נכונה! +${p} נקודות</div>
+      <div class="fb-explain">📚 ${q.e}</div>`;
     playSound(true);
     floatXP(btn,p);
     const sb=$('qScore');
@@ -876,8 +929,14 @@ function selectAns(idx,btn){
   }else{
     st.streak=0;
     $('streakEl').style.visibility='hidden';
-    fb.className='feedback ng';
-    fb.textContent=`❌ לא נכון. התשובה הנכונה: ${q.o[q.a]}. ${q.e}`;
+    // track error
+    st.tErrors.push({qi:st.qi,t:q.t,chosen:q.o[idx],correct:q.o[q.a],e:q.e});
+    fb.className='feedback ng fb-ng';
+    fb.innerHTML=`
+      <div class="fb-result">❌ לא נכון</div>
+      <div class="fb-chosen">בחרת: ${q.o[idx]}</div>
+      <div class="fb-correct">✅ התשובה הנכונה: ${q.o[q.a]}</div>
+      <div class="fb-explain">📚 ${q.e}</div>`;
     playSound(false);
   }
 
@@ -924,9 +983,36 @@ function showTopicEnd(){
   });
   $('teBD').innerHTML=bd;
 
+  // error report
+  const es=$('errSection');
+  if(st.tErrors.length===0){
+    es.innerHTML=`<div class="err-toggle none">🎯 כל הכבוד — אפס שגיאות בפרק!</div>`;
+  }else{
+    const errItems=st.tErrors.map((err,i)=>`
+      <div class="err-item">
+        <div class="err-q">שאלה ${err.qi+1}: ${err.t}</div>
+        <div class="err-chosen">❌ בחרת: ${err.chosen}</div>
+        <div class="err-correct">✅ נכון: ${err.correct}</div>
+        <div class="err-exp">📚 ${err.e}</div>
+      </div>`).join('');
+    es.innerHTML=`
+      <button class="err-toggle" onclick="toggleErrors(this)">
+        <span>⚠️ דוח שגיאות — ${st.tErrors.length} שגיאות</span>
+        <span>▼</span>
+      </button>
+      <div class="err-list" id="errList" style="display:none">${errItems}</div>`;
+  }
+
   const isLast=st.ti>=TOPICS.length-1;
   $('btnCont').textContent=isLast?'לתוצאה הסופית 🏁':`הנושא הבא: ${TOPICS[st.ti+1].name} →`;
   show('s-te');
+}
+
+function toggleErrors(btn){
+  const list=$('errList');
+  const open=list.style.display==='flex';
+  list.style.display=open?'none':'flex';
+  btn.querySelector('span:last-child').textContent=open?'▼':'▲';
 }
 
 function goNext(){
@@ -973,7 +1059,7 @@ function showFinal(){
 }
 
 function restartGame(){
-  st={name:'',ti:0,qi:0,tScore:0,tCorrect:[0,0,0],total:0,tScores:[0,0,0,0],streak:0};
+  st={name:'',ti:0,qi:0,tScore:0,tCorrect:[0,0,0],total:0,tScores:[0,0,0,0,0,0,0,0,0,0,0],streak:0,tErrors:[],hintUsed:false};
   $('nameInp').value='';
   $('btnStart').disabled=true;
   setTC('#8B5CF6');
