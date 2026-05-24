@@ -841,10 +841,8 @@ function renderQ(){
   $('btnNext').style.display='none';
 
   // re-trigger animation
-  const card=$('qCard');
-  card.style.animation='none';
-  void card.offsetHeight;
-  card.style.animation='slideUp .32s ease';
+  const card=document.querySelector('.q-card');
+  if(card){card.style.animation='none';void card.offsetHeight;card.style.animation='slideUp .32s ease';}
 }
 
 function selectAns(idx,btn){
